@@ -1,0 +1,127 @@
+#===============
+# Code for Assignment No 2 (due to 17.02.2021)
+# Code written by Yeliz Özer & Marian Sunderbrink
+#===============
+
+# Install Packages
+library(igraph)
+library(tidyverse)
+library(readxl)
+
+
+#===============
+# Task 1
+
+# Import data set
+subsidies <- read_excel("C:/Users/marian/Desktop/subsidies.csv")
+subsidies <- read.csv("subsidies.csv", col_names = TRUE)
+subsidies <- fread("subsidies.csv", dec = ",")
+
+# Checking the structure of the data set
+View(subsidies)
+summary(subsidies)
+str(subsidies)
+is.na(subsidies)
+
+# Show adjacency matrix
+adj_mat
+
+
+# Selection of a federal state
+sub_nrw <- subsidies %>%
+  filter(Nordrhein-Westfalen,
+# ?((how to connect the connection of the state to other states by the same project_id?))
+
+
+# Show all projects in which organizations from this state are involved
+
+subsidies <- subsidies %>%
+  filter(!is.na(project_id)) ?
+ 
+# Show edgelist; Number of edges in the network
+edge_list
+
+# Transform the filtered data set in an igraph object
+subsidies <- graph_from_data_frame(sub_project_id = edge_list, vertices = node_info, directed = FALSE)
+
+#=============
+# Task 2
+
+
+# Transform the two-mode network into one mode projection; containing organizations only
+bipartite_mapping(Actor)
+bipartite_projection(Actor)
+# how to combine with same project_id?
+
+
+
+
+#==============
+# Task 3
+
+# Number of components in the network?  
+
+sub_nrw_comps <- decompose(sub_nrw)
+sub_nrw_comps
+
+# Extract the largest component
+plot(sub_nrw,
+     vertex.size = 4,
+     vertex.label.cex = 0,8,
+     vertex.label.color = "black")
+
+
+#================
+# Task 4
+
+# Calculate the three node-level centralities & assign the three centralities as additional node attributes
+
+# 1/3 Degree Centrality
+deg <- degree(sub_nrw, mode = "all")
+sort(deg)
+
+# Assign degree centrality as additional node attribute
+V(sub_nrw)$deg <- d
+
+# 2/3 Betweenness centrality
+V(sub_nrw) <- betweenness(sub_nrw, directed = TRUE)
+sort(V(sub_nrw))$btw
+
+
+# 3/3 Closeness centrality
+closeness(sub_nrw)
+
+#==============
+# Task 4a
+
+# Calculate a correlation matrix containing the three centralities.
+
+
+# How are the centralities related?
+
+
+#===============
+# Task 4b
+
+# Which are the most important nodes based on the degree and the betweenness centrality?
+
+
+
+#================
+# Task 5
+
+# Visualize the network. Size of nodes based on betweenness centrality
+
+plot(sub_nrw)
+bipartite_mapping(sub_nrw)
+
+g <- graph_from_data_frame(project_id, directed = FALSE)
+V(g)$type <- bipartite_mapping(g)$type
+
+# ?? g_bipartite <- bipartite_projection(g)
+
+
+#================
+# Task 6
+
+# Is the network a small world?
